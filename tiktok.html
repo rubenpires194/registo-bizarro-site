@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Registo Bizarro — Autorização TikTok</title>
+<style>
+  :root{--bg:#0A0A0A;--fg:#FFFFFF;--accent:#00B4FF;--mut:#9aa0a6;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center}
+  .wrap{max-width:680px;padding:40px 22px}
+  .tag{color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:2px;font-size:12px}
+  h1{letter-spacing:2px;text-transform:uppercase;font-size:24px;margin:6px 0 14px}
+  p{color:#cfd2d4}
+  .ok{color:#39d98a;font-weight:700}
+  .err{color:#ff6b6b;font-weight:700}
+  .code{margin:20px auto;background:#141414;border:1px solid #222;border-radius:12px;padding:16px;word-break:break-all;font-family:ui-monospace,Consolas,monospace;font-size:14px;color:#00B4FF}
+  button{background:#00B4FF;color:#001018;border:0;border-radius:10px;padding:12px 22px;font-size:15px;font-weight:700;cursor:pointer}
+  .small{color:var(--mut);font-size:13px;margin-top:20px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="tag">Registo Bizarro</div>
+  <h1>Autorização TikTok</h1>
+  <div id="msg"><p>A processar&hellip;</p></div>
+  <p class="small">Esta página entrega o código ao programa no teu PC automaticamente.<br>Se o terminal não avançar sozinho, copia o código acima e cola lá.</p>
+</div>
+<script>
+function copyCode(){
+  try{ navigator.clipboard.writeText(document.getElementById('c').innerText);
+       document.getElementById('cpbtn').innerText='Copiado ✓'; }catch(e){}
+}
+(function(){
+  var q = window.location.search || "";
+  var p = new URLSearchParams(q);
+  var code = p.get("code"), error = p.get("error");
+  var msg = document.getElementById("msg");
+  if (error){ msg.innerHTML = '<p class="err">Erro do TikTok: '+error+'</p>'; return; }
+  if (!code){ msg.innerHTML = '<p class="err">Não recebi nenhum código na resposta.</p>'; return; }
+  msg.innerHTML = '<p class="ok">Autorizado! Código recebido.</p>'
+    + '<div class="code" id="c">'+code+'</div>'
+    + '<button id="cpbtn" onclick="copyCode()">Copiar código</button>';
+  // Entrega automatica ao servidor local do script (localhost = origem segura no Chrome)
+  try{ fetch("http://localhost:8080/"+q, {mode:"no-cors", cache:"no-store"}); }catch(e){}
+  try{ fetch("http://127.0.0.1:8080/"+q, {mode:"no-cors", cache:"no-store"}); }catch(e){}
+})();
+</script>
+</body>
+</html>
